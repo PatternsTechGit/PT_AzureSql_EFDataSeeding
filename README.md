@@ -52,25 +52,36 @@ It will create a new Azure SQL database as below :
 
 ![2](https://user-images.githubusercontent.com/100709775/161048264-2f677161-a521-4a20-af02-8f7f8d4b4512.PNG)
 
+ <font size="5" color="grey">**Step 2: Inherit BBBankContext from Entity Framework core**</font> 
+
+ To use DBContext install EF Core using the command in Package Manager Console as below 
+
+```
+Install-Package Microsoft.EntityFrameworkCore.Design
+```
+
+For for migrations run the command as below 
+```
+Install-Package Microsoft.EntityFrameworkCore.SqlServer
+```
+
+BBBankContext will be dependency injected in `Program.cs` so we have to pass its options to `BBBankContext` class using constructor
+
+```cs
+public BBBankContext(DbContextOptions<BBBankContext> options) : base(options) { }
+
+ ```  
 
 
+ <font size="5" color="grey">**Step 3: Creating DbSet**</font> 
+
+ A [DbSet](https://docs.microsoft.com/en-us/dotnet/api/system.data.entity.dbset-1?view=entity-framework-6.2.0#:~:text=A%20DbSet%20represents%20the%20collection,Set%20method.) represents the collection of all entities in the context, or that can be queried from the database, of a given type. DbSet objects are created from a DbContext using the DbContext.Set method.
 
 
+Initilize all the Database models with DbSet in `BBBankContext` class
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+```cs
+        public DbSet<Account> Accounts { get; set; }
+        public DbSet<Transaction> Transactions { get; set; }
+```
 
