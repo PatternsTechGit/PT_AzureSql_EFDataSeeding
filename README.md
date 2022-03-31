@@ -40,14 +40,37 @@ In this exersie
 
  Create a new resource and select SQL Database and click create as below 
 
- ![1](https://user-images.githubusercontent.com/100709775/161023609-3622c3f4-333f-4055-9005-0e6374bb0812.PNG)
+![1](https://user-images.githubusercontent.com/100709775/161048255-a5a920dd-99b5-4722-affe-c9cd05eec839.PNG)
 
 * Select relevant subscrition
-* Select relevant resource group (create if not exists)
+* Select relevant resource group (create new resource group if not exists)
 * Enter database name : BBBankDB
 * Select relevant server 
-* Click Review & Create
+* Click Review + Create
 
 It will create a new Azure SQL database as below :
 
-![2](https://user-images.githubusercontent.com/100709775/161024584-4f7c9d00-525e-4f27-a0ba-0bb9653803b4.PNG)
+![2](https://user-images.githubusercontent.com/100709775/161048264-2f677161-a521-4a20-af02-8f7f8d4b4512.PNG)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
