@@ -42,10 +42,10 @@ In this exersie
 
  ![1](https://user-images.githubusercontent.com/100709775/161023609-3622c3f4-333f-4055-9005-0e6374bb0812.PNG)
 
-* Select ralevant subscrition
-* Select ralevant resource group (create if not exists)
+* Select relevant subscrition
+* Select relevant resource group (create if not exists)
 * Enter database name : BBBankDB
-* Select ralevant server 
+* Select relevant server 
 * Click Review & Create
 
 It will create a new Azure SQL database as below :
