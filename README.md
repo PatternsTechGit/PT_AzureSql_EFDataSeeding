@@ -55,7 +55,7 @@ It will create a new Azure SQL database as below :
 
  ## Step 2: Inherit BBBankContext from Entity Framework core 
 
- To use DBContext install EF Core using the command in Package Manager Console as below 
+ To use `DBContext` install EF Core using the command in Package Manager Console as below 
 
 ```
 Install-Package Microsoft.EntityFrameworkCore.Design
@@ -67,7 +67,7 @@ For for migrations run the command as below
 Install-Package Microsoft.EntityFrameworkCore.SqlServer
 ```
 
-BBBankContext will be dependency injected in `Program.cs` so we have to pass its options to `BBBankContext` class using constructor
+BBBankContext will be dependency injected in `Program.cs` so we have to pass its options to BBBankContext class using constructor
 
 ```cs
 public BBBankContext(DbContextOptions<BBBankContext> options) : base(options) { }
@@ -95,7 +95,7 @@ Initilize all the Database models with DbSet in `BBBankContext` class
 
 When a migration is added the changes to the data specified with `HasData` are transformed to calls to `InsertData(), UpdateData(), and DeleteData()`.
 
-Override the `OnModelCreating` method in `BBBankContext` class and initialize the data as below 
+Override the `OnModelCreating` method in BBBankContext class and initialize the data as below 
 
 ```cs
  protected override void OnModelCreating(ModelBuilder modelBuilder)
