@@ -87,7 +87,7 @@ Initilize all the Database models with DbSet in `BBBankContext` class
         public DbSet<Transaction> Transactions { get; set; }
 ```
 
- ## Step 4: Seeding Data 
+ ## Step 4: Data Seeding 
 
 [Data seeding](https://docs.microsoft.com/en-us/ef/core/modeling/data-seeding#:~:text=Data%20seeding%20is%20the%20process,Custom%20initialization%20logic) is the process of populating a database with an initial set of data.
 
