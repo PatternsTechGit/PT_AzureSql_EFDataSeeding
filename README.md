@@ -69,10 +69,13 @@ For for migrations run the command as below
 Install-Package Microsoft.EntityFrameworkCore.SqlServer
 ```
 
-BBBankContext will be dependency injected in `Program.cs` so we have to pass its options to BBBankContext class using constructor
+BBBankContext will be dependency injected in `Program.cs` so first we will inherit the BBankContext class with DbContext and we will pass options to BBBankContext class constructor
 
 ```cs
-public BBBankContext(DbContextOptions<BBBankContext> options) : base(options) { }
+   public class BBBankContext: DbContext
+    {
+        public BBBankContext(DbContextOptions<BBBankContext> options) : base(options) { }   
+    }
 
 ```
 
@@ -85,9 +88,14 @@ public BBBankContext(DbContextOptions<BBBankContext> options) : base(options) { 
 Initilize all the Database models with DbSet in `BBBankContext` class
 
 ```cs
+     public class BBBankContext: DbContext
+    {
+        public BBBankContext(DbContextOptions<BBBankContext> options) : base(options) { }
         public DbSet<Account> Accounts { get; set; }
         public DbSet<Transaction> Transactions { get; set; }
+     }
 ```
+
 
  ## Step 4: Data Seeding 
 
