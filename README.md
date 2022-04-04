@@ -255,6 +255,6 @@ Then run the `update-Database` which executes the last migration file created by
 Update-Database
 ```
 
-Verify that the data is present in the database by accessing the table from server explorer and by running the API.
+Verify that the data is present in the database by accessing the table from server explorer and by running the API with URL http://localhost:5070/api/Transaction/GetLastThreeYearsBalancesById/37846734-172e-4149-8cec-6f43d1eb3f60
 
 ![final](https://user-images.githubusercontent.com/100709775/161064435-8d6a2171-1164-4135-abb3-1827558df15e.png)
