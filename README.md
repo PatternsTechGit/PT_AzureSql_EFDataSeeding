@@ -9,7 +9,7 @@ EF Core can serve as an object-relational mapper (O/RM), which:
 
 ## What are the three approaches in Entity Framework?
 
-* The [Database First Approach](https://www.tutorialspoint.com/entity_framework/entity_database_first_approach.htm#:~:text=The%20Database%20First%20Approach%20provides,between%20the%20database%20and%20controller.) creates the entity framework from an existing database. It creates model codes (classes, properties, DbContext etc.) from the database in the project and those classes become the link between the database and controller.
+* The [Database First Approach](https://www.tutorialspoint.com/entity_framework/entity_database_first_approach.htm#:~:text=The%20Database%20First%20Approach%20provides,between%20the%20database%20and%20controller.) creates the entity framework from an existing database. It creates model codes (classes, properties, DbContext etc..) from the database in the project and those classes become the link between the database and controller.
 
 * The [Model First Approach](https://docs.microsoft.com/en-us/ef/ef6/modeling/designer/workflows/model-first#:~:text=Model%20First%20allows%20you%20to,in%20the%20Entity%20Framework%20Designer.) allows you to create a new model using the Entity Framework Designer and then generate a database schema from the model. The model is stored in an EDMX file (.edmx extension) and can be viewed and edited in the Entity Framework Designer.
 
@@ -30,8 +30,10 @@ Previously We already has a service oriented architecture base framework in plac
 
 To see how this was setup [Click Here](https://github.com/PatternsTechGit/PT_ServiceOrientedArchitecture)
 
-In this exersie
- we will use EF Code first approach to generate  DB of a fictitious bank application called BBBank.
+## In this exercise
+
+ * we will use EF Code first approach to generate Database of a fictitious bank application called BBBank.
+ * Applying Data Seeding to the database
 
  Here are the steps to begin with 
 
@@ -152,7 +154,7 @@ Go to the database from Azure portal and click on link Connection String under s
 
 ![3](https://user-images.githubusercontent.com/100709775/161055681-804d2faf-34ae-43d1-beea-270ba87c3006.PNG)
 
-Go to appsettings.json and add a new section for ConnectionStrings as below 
+Go to appsettings.json and add a new section for Connection Strings as below :
 
 ```cs
  "ConnectionStrings": {
