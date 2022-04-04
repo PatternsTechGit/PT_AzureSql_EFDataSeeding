@@ -189,6 +189,7 @@ builder.Services.AddScoped<ITransactionService, TransactionService>();
 builder.Services.AddScoped<DbContext, BBBankContext>();
 
 //Adding EF DBContext in the application services using the connectionString fetched above.
+//UseLazyLoadingProxies : Lazy loading means that the related data is transparently loaded from the database when the navigation property is accessed.
 builder.Services.AddDbContext<BBBankContext>(
 b => b.UseSqlServer(connectionString)
 .UseLazyLoadingProxies(true)
