@@ -282,6 +282,7 @@ The  [Migration](https://docs.microsoft.com/en-us/ef/core/managing-schemas/migra
 
  ```
 Install-Package Microsoft.EntityFrameworkCore.Tools
+Install-Package Microsoft.EntityFrameworkCore.Relational
  ```
 
 Run the command `Add-Migration` which creates a new migration class as per specified name with the `Up()` and `Down()` methods. The `Up()` method contains code for creating database objects and the `Down()` method contains code for dropping or deleting database objects.
