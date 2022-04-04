@@ -248,9 +248,9 @@ Install-Package Microsoft.EntityFrameworkCore.Proxies
   Select the Relevant IP address and click add.
 
 
-## Step 9 : Setting Up Virtual keyword
+## Step 9 : Setting Virtual keyword
 
-The virtual keyword in C# is used to override the base class member in its derived class based on the requirement.
+The `virtual` keyword in C# is used to override the base class member in its derived class based on the requirement.
 
 Here we will add virtual keyword to `Transactions` object in Account class and `Account` object in Transaction class as below :
 
