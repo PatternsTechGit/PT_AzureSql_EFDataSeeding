@@ -273,7 +273,7 @@ Here we will add virtual keyword to `Transactions` object in Account class and `
     }
 ```
 
-  ## Step 9: Migrations 
+  ## Step 10: Migrations 
 
 The  [Migration](https://docs.microsoft.com/en-us/ef/core/managing-schemas/migrations/?tabs=dotnet-core-cli) 
  feature in EF Core provides a way to incrementally update the database schema to keep it in sync with the application's data model while preserving existing data in the database.
