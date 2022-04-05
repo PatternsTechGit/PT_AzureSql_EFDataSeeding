@@ -36,8 +36,8 @@ For more details about this base project See: https://github.com/PatternsTechGit
 
 ## In this exercise
 
- * we will use EF Code first approach to generate Database of a fictitious bank application called BBBank.
- * Applying Data Seeding to the database
+ * We will use EF Code first approach to generate Database of a fictitious bank application called BBBank.
+ * Applying Data Seeding to the database.
 
  Here are the steps to begin with 
 
