@@ -24,7 +24,7 @@ Previously we developed a base structure of an api solution in Asp.net core that
 There are 4 Projects in the solution. 
 
 - **Entities** : That have DB Model Account with one-to-many Transaction and Response Model of LineGraphData that will be returned as API Response. 
-- **Infrastructure**: BBBankContext that servs as fake DBContext that populates one Account with three Transactions with hardcoded data. 
+- **Infrastructure**: BBBankContext that serves as fake DBContext that populates one Account with three Transactions with hardcoded data. 
 - **Services**: That has TranasacionService with the logic of converting Account and its Transactions into LineGraphData after fetching it from BBBankContext. 
 
 - **BBBankAPI**: That has TransactionController which is implementation of ASP.net core’s API, to call Services layer. 
@@ -52,7 +52,7 @@ For more details about this base project See: https://github.com/PatternsTechGit
 * Select relevant subscrition
 * Select relevant resource group (create new resource group if not exists)
 * Enter database name : BBBankDB
-* Select relevant server 
+* Select relevant server or create a new server
 * Click Review + Create
 
 It will create a new Azure SQL database as below :
@@ -64,6 +64,7 @@ It will create a new Azure SQL database as below :
  To use `DBContext` install EF Core using the command in Package Manager Console as below 
 
 ```
+Install-Package Microsoft.EntityFrameworkCore
 Install-Package Microsoft.EntityFrameworkCore.Design
 ```
 
@@ -107,13 +108,64 @@ Initilize all the Database models with DbSet in `BBBankContext` class
 
 `OnModelCreating` method can be override in your derived context which is used to configure your model. This is the most powerful method of configuration and allows configuration to be specified without modifying your entity classes.
 
-When a migration is added the changes to the data specified with `HasData` are transformed to calls to `InsertData(), UpdateData(), and DeleteData()`.
 
-Override the `OnModelCreating` method in BBBankContext class and initialize the data as below 
+Previously we have set hardcoded data which looks like below
+
+```cs
+public class BBBankContext
+{
+        public BBBankContext()
+        {
+            this.Accounts = new List<Account>();                // intilizing empty accounts
+
+           // intializing some transactions
+            var tomTransactions = new List<Transaction>();
+            tomTransactions.Add(new Transaction()
+            {
+                Id = Guid.NewGuid().ToString(),                 // Auto generating Id
+                TransactionAmount = 3000M,                      // Transaction of 3000$
+                TransactionDate = DateTime.Now.AddDays(1),      // Tranaction happed yesterday
+                TransactionType = TransactionType.Deposit       // ammount was added
+            });
+            tomTransactions.Add(new Transaction()
+            {
+                Id = Guid.NewGuid().ToString(),                 // Auto generating Id
+                TransactionAmount = -500M,                      // Transaction of 500$
+                TransactionDate = DateTime.Now.AddYears(-1),    // Transaction happend one year ago
+                TransactionType = TransactionType.Withdraw      // amount was subtracted
+            });
+            tomTransactions.Add(new Transaction()
+            {
+                Id = Guid.NewGuid().ToString(),                 // Auto generating Id
+                TransactionAmount = 1000M,                      // Transaction of 100$
+                TransactionDate = DateTime.Now.AddYears(-2),    // Transaction happend two year ago
+                TransactionType = TransactionType.Deposit       // amount was added
+            });
+            this.Accounts.Add(new Account
+            {
+                Id = "37846734-172e-4149-8cec-6f43d1eb3f60",    // Unique GUID of the account
+                AccountNumber = "0001-1001",                    // Account number
+                AccountTitle = "Tom Hanks",                     // Account Title
+                CurrentBalance = 3500M,                         // Account balance matches the transaction
+                AccountStatus = AccountStatus.Active,           // Account status
+                Transactions = tomTransactions                  // associating above transactions with the account
+            }); 
+        }
+        public List<Account> Accounts { get; set; }
+        
+}
+
+```
+
+
+In this step we will add an override `OnModelCreating` method in BBBankContext class and initialize the data.
+
+Here we have addded the migration that changes to the data specified with `HasData` are transformed to calls to `InsertData(), UpdateData(), and DeleteData()`.
 
 ```cs
  protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            //The modelBuilder is being used to construct the model for this context.
             modelBuilder.Entity<Account>(b =>
             {
                 b.HasData(new Account
@@ -179,24 +231,21 @@ Go to appsettings.json and add a new section for Connection Strings as below :
  Open the program.cs and paste the code as below 
 
  ```cs
-using Infrastructure;
-using Microsoft.EntityFrameworkCore;
-using Services;
-using Services.Contracts;
-
 var builder = WebApplication.CreateBuilder(args);
 
+// Reading the appsettings.json from current directory.
 var configuration = new ConfigurationBuilder()
                .SetBasePath(Directory.GetCurrentDirectory())
                .AddJsonFile("appsettings.json")
                .Build();
 
+// Fetching the value BBBankDBConnString from connectionstring section.
 var connectionString = configuration.GetConnectionString("BBBankDBConnString");
 
 // Add services to the container.
 
 builder.Services.AddControllers();
-
+///...Dependency Injection settings
 builder.Services.AddScoped<ITransactionService, TransactionService>();
 builder.Services.AddScoped<DbContext, BBBankContext>();
 
@@ -207,15 +256,6 @@ b => b.UseSqlServer(connectionString)
 .UseLazyLoadingProxies(true)
 );
 var app = builder.Build();
-
-// Configure the HTTP request pipeline.
-
-app.UseAuthorization();
-
-app.MapControllers();
-
-app.Run();
-
  ```
 
  To Resolve UseSqlServer and UseLazyLoadingProxies install the folloiwing nugets in Api project
@@ -241,7 +281,7 @@ Install-Package Microsoft.EntityFrameworkCore.Proxies
 
   ## Step 8: Resolve IP access error 
 
-  Go to the database from Azure portal and click 'Set Server Firewall' as below 
+  You might get an error because by-default your IP address is blocked, To resolve this error go to the database from Azure portal and click 'Set Server Firewall' as below 
 
   ![5](https://user-images.githubusercontent.com/100709775/161060394-d2adae0e-504a-42c1-bb90-cbe4521fa3b1.PNG)
 
@@ -254,7 +294,7 @@ The `virtual` keyword in C# is used to override the base class member in its der
 
 Here we will add virtual keyword to `Transactions` object in Account class and `Account` object in Transaction class as below :
 
-```c#
+```cs
  public class Transaction : BaseEntity
     {
         public TransactionType TransactionType { get; set; }
@@ -297,6 +337,9 @@ Then run the `update-Database` which executes the last migration file created by
 Update-Database
 ```
 
-Verify that the data is present in the database by accessing the table from server explorer and by running the API with URL http://localhost:5070/api/Transaction/GetLastThreeYearsBalancesById/37846734-172e-4149-8cec-6f43d1eb3f60
+Verify that the data is present in the database by accessing the table from server explorer as below : 
+![11111](https://user-images.githubusercontent.com/100709775/161940859-25a55be4-36b5-4da2-8c89-e4d8b23b3e6a.PNG)
 
-![final](https://user-images.githubusercontent.com/100709775/161064435-8d6a2171-1164-4135-abb3-1827558df15e.png)
+Run the API with URL http://localhost:5070/api/Transaction/GetLastThreeYearsBalancesById/37846734-172e-4149-8cec-6f43d1eb3f60 and see results as below 
+
+![222222](https://user-images.githubusercontent.com/100709775/161940867-5ef6b1b2-1295-4bd2-a13f-86f3bf75915b.png)
