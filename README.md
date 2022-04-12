@@ -18,20 +18,19 @@ EF Core can serve as an object-relational mapper (O/RM), which:
 ## About this exercise
 
 Previously we developed a base structure of an api solution in Asp.net core that have just two api functions `GetLast3MonthBalances` & `GetLast3MonthBalances/{accountId}` which returns data of the last 3 months total balances. 
- 
+
 ![MicrosoftTeams-image (1)](https://user-images.githubusercontent.com/100709775/161592915-395a3983-2efb-459d-ac63-1815249193f7.png)
 
 There are 4 Projects in the solution. 
 
 - **Entities** : This project contains DB models like User where each User has one Account and each Account can have one or many Transactions. There is also a Response Model of LineGraphData that will be returned as API Response. 
-   
-- **Infrastructure**: This project contains BBBankContext that servs as fake DBContext that populates one User with its coresponding Account that has three Transactions dated of last three months with hardcoded data. 
- 
+
+- **Infrastructure**: This project contains BBBankContext that serves as fake DBContext that populates one User with its corresponding Account that has three Transactions dated of last three months with hardcoded data. 
+
 - **Services**: This project contains TranasacionService with the logic of converting Transactions into LineGraphData after fetching themfrom BBBankContext.
 
 
 - **BBBankAPI**: This project contains TransactionController with 2 GET methods `GetLast3MonthBalances` & `GetLast3MonthBalances/{accountId}` to call the TransactionService.
-  
 
 
 ![MicrosoftTeams-image](https://user-images.githubusercontent.com/100709775/161592969-78e99e2b-070f-45a5-a15f-8299364f0554.png)
@@ -322,7 +321,7 @@ Install-Package Microsoft.EntityFrameworkCore.Proxies
 
 The `virtual` keyword in C# is used to override the base class member in its derived class based on the requirement.
 
-Here we will add virtual keyword to `Transactions` object in Account class and `Account` object in Transaction class as below :
+Here we will add virtual keyword to `Transactions` object in Account class, `Account` object in Transaction class and `Account` object in User class as below :
 
 ```cs
     public class Transaction : BaseEntity // Inheriting from Base Entity class
@@ -340,6 +339,8 @@ Here we will add virtual keyword to `Transactions` object in Account class and `
         public Account Account { get; set; }
     }
 ```
+
+We have also added `User` object and a forignkey `UserId` in Account class
 
 ```cs
     public class Account : BaseEntity // Inheriting from Base Entity class
@@ -366,9 +367,6 @@ Here we will add virtual keyword to `Transactions` object in Account class and `
         public virtual ICollection<Transaction> Transactions { get; set; }
     }
 
-```
-
-```cs
     public class User : BaseEntity
     {
         // First name of the user.
