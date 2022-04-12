@@ -5,16 +5,15 @@ using Services.Contracts;
 
 var builder = WebApplication.CreateBuilder(args);
 
-//Reading the appsettings.json file
 var configuration = new ConfigurationBuilder()
                .SetBasePath(Directory.GetCurrentDirectory())
                .AddJsonFile("appsettings.json")
                .Build();
 
-//Getting connectionstring value from connectionstring section in appsettings.json
 var connectionString = configuration.GetConnectionString("BBBankDBConnString");
 
 // Add services to the container.
+
 builder.Services.AddControllers();
 
 builder.Services.AddScoped<ITransactionService, TransactionService>();
