@@ -360,7 +360,7 @@ We have also added `User` object and a foreign key `UserId` in Account class
         // Setting foreign key for 1 to 1 relationship
         [ForeignKey("UserId")]              
         public string UserId { get; set; }
-         // One User might have 1 Account (1:1 relationship) 
+        // One Account might have 1 User (1:1 relationship) 
         public virtual User User { get; set; }
                 
         // One Account might have 0 or more Transactions (1:Many relationship)
