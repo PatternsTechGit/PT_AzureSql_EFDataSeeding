@@ -321,7 +321,7 @@ Install-Package Microsoft.EntityFrameworkCore.Proxies
 
 The `virtual` keyword in C# is used to override the base class member in its derived class based on the requirement.
 
-Here we will add virtual keyword to `Transactions` object in Account class, `Account` object in Transaction class and `Account` object in User class as below :
+Here we will add virtual keyword to `Account` object in Transaction class, `Transactions` object in Account class and `Account` object in User class as below :
 
 ```cs
     public class Transaction : BaseEntity // Inheriting from Base Entity class
@@ -336,7 +336,7 @@ Here we will add virtual keyword to `Transactions` object in Account class, `Acc
         public decimal TransactionAmount { get; set; }
 
         //Associated account of that transaction
-        public Account Account { get; set; }
+        public virtual Account Account { get; set; }
     }
 ```
 
