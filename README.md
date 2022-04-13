@@ -19,7 +19,7 @@ EF Core can serve as an object-relational mapper (O/RM), which:
 
 Previously we developed a base structure of an api solution in Asp.net core that have just two api functions `GetLast3MonthBalances` & `GetLast3MonthBalances/{accountId}` which returns data of the last 3 months total balances. 
 
-![MicrosoftTeams-image (1)](https://user-images.githubusercontent.com/100709775/161592915-395a3983-2efb-459d-ac63-1815249193f7.png)
+![1](https://user-images.githubusercontent.com/100709775/163239141-1aa56837-0ec5-4ac4-97b0-2133f752410e.png)
 
 There are 4 Projects in the solution. 
 
@@ -33,7 +33,7 @@ There are 4 Projects in the solution.
 - **BBBankAPI**: This project contains TransactionController with 2 GET methods `GetLast3MonthBalances` & `GetLast3MonthBalances/{accountId}` to call the TransactionService.
 
 
-![MicrosoftTeams-image](https://user-images.githubusercontent.com/100709775/161592969-78e99e2b-070f-45a5-a15f-8299364f0554.png)
+![2](https://user-images.githubusercontent.com/100709775/163239152-351b78e7-6295-4c53-b8c1-c5f89305e8b3.png)
 
 For more details about this base project See: https://github.com/PatternsTechGit/PT_ServiceOrientedArchitecture 
 
@@ -357,10 +357,10 @@ We have also added `User` object and a foreign key `UserId` in Account class
         //Account's status 
         public AccountStatus AccountStatus { get; set; }
 
-        // Setting foreign key to resolve circular dependency
+        // Setting foreign key for 1 to 1 relationship
         [ForeignKey("UserId")]              
         public string UserId { get; set; }
-         // One User might have 1 or more Accounts (1:Many relationship) 
+         // One User might have 1 Account (1:1 relationship) 
         public virtual User User { get; set; }
                 
         // One Account might have 0 or more Transactions (1:Many relationship)
@@ -381,7 +381,7 @@ We have also added `User` object and a foreign key `UserId` in Account class
         // Profile picture URL of user.
         public string ProfilePicUrl { get; set; }
 
-        // One USer might have 1 or more Account (1:Many relationship)
+        // One User might have 1 Account (1:1 relationship)
         public virtual Account Account { get; set; }
     }
 ```
