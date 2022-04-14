@@ -17,19 +17,23 @@ EF Core can serve as an object-relational mapper (O/RM), which:
 
 ## About this exercise
 
-Previously we developed a base structure of an api solution in Asp.net core that have just one function which returns data of the last three years total balances against a given AccountID. 
- 
-![MicrosoftTeams-image (1)](https://user-images.githubusercontent.com/100709775/161592915-395a3983-2efb-459d-ac63-1815249193f7.png)
+Previously we developed a base structure of an api solution in Asp.net core that have just two api functions `GetLast3MonthBalances` & `GetLast3MonthBalances/{accountId}` which returns data of the last 3 months total balances. 
+
+![1](https://user-images.githubusercontent.com/100709775/163239141-1aa56837-0ec5-4ac4-97b0-2133f752410e.png)
 
 There are 4 Projects in the solution. 
 
-- **Entities** : That have DB Model Account with one-to-many Transaction and Response Model of LineGraphData that will be returned as API Response. 
-- **Infrastructure**: BBBankContext that serves as fake DBContext that populates one Account with three Transactions with hardcoded data. 
-- **Services**: That has TranasacionService with the logic of converting Account and its Transactions into LineGraphData after fetching it from BBBankContext. 
+- **Entities** : This project contains DB models like User where each User has one Account and each Account can have one or many Transactions. There is also a Response Model of LineGraphData that will be returned as API Response. 
 
-- **BBBankAPI**: That has TransactionController which is implementation of ASP.net core’s API, to call Services layer. 
+- **Infrastructure**: This project contains BBBankContext that serves as fake DBContext that populates one User with its corresponding Account that has three Transactions dated of last three months with hardcoded data. 
 
-![MicrosoftTeams-image](https://user-images.githubusercontent.com/100709775/161592969-78e99e2b-070f-45a5-a15f-8299364f0554.png)
+- **Services**: This project contains TranasacionService with the logic of converting Transactions into LineGraphData after fetching them from BBBankContext.
+
+
+- **BBBankAPI**: This project contains TransactionController with 2 GET methods `GetLast3MonthBalances` & `GetLast3MonthBalances/{accountId}` to call the TransactionService.
+
+
+![2](https://user-images.githubusercontent.com/100709775/163239152-351b78e7-6295-4c53-b8c1-c5f89305e8b3.png)
 
 For more details about this base project See: https://github.com/PatternsTechGit/PT_ServiceOrientedArchitecture 
 
@@ -49,7 +53,7 @@ For more details about this base project See: https://github.com/PatternsTechGit
 
 ![1](https://user-images.githubusercontent.com/100709775/161048255-a5a920dd-99b5-4722-affe-c9cd05eec839.PNG)
 
-* Select relevant subscrition
+* Select relevant subscription
 * Select relevant resource group (create new resource group if not exists)
 * Enter database name : BBBankDB
 * Select relevant server or create a new server
@@ -90,16 +94,18 @@ BBBankContext will be dependency injected in `Program.cs` so first we will inher
  A [DbSet](https://docs.microsoft.com/en-us/dotnet/api/system.data.entity.dbset-1?view=entity-framework-6.2.0#:~:text=A%20DbSet%20represents%20the%20collection,Set%20method.) represents the collection of all entities in the context, or that can be queried from the database, of a given type. DbSet objects are created from a DbContext using the DbContext.Set method.
 
 
-Initilize all the Database models with DbSet in `BBBankContext` class
+Initialize all the Database models with DbSet in `BBBankContext` class
 
 ```cs
      public class BBBankContext: DbContext
     {
         public BBBankContext(DbContextOptions<BBBankContext> options) : base(options) { }
+        public DbSet<User> Users { get; set; }
         public DbSet<Account> Accounts { get; set; }
         public DbSet<Transaction> Transactions { get; set; }
      }
 ```
+
 
 
  ## Step 4: Data Seeding 
@@ -115,32 +121,24 @@ Previously we have set hardcoded data which looks like below
 public class BBBankContext
 {
         public BBBankContext()
-        {
-            this.Accounts = new List<Account>();                // intilizing empty accounts
+        { 
+            // creating the collection for user list
+            this.Users = new List<User>();
 
-           // intializing some transactions
-            var tomTransactions = new List<Transaction>();
-            tomTransactions.Add(new Transaction()
+            // initializing a new user
+            this.Users.Add(new User
             {
-                Id = Guid.NewGuid().ToString(),                 // Auto generating Id
-                TransactionAmount = 3000M,                      // Transaction of 3000$
-                TransactionDate = DateTime.Now.AddDays(1),      // Tranaction happed yesterday
-                TransactionType = TransactionType.Deposit       // ammount was added
+                Id = "b6111852-a1e8-4757-9820-70b8c20e1ff0",    // Unique GUID of the account
+                FirstName = "Ali",          // FirstName                             
+                LastName = "Taj",           // LastName
+                Email = "malitaj-dev@outlook.com",  // Email Address
+                ProfilePicUrl = "https://res.cloudinary.com/demo/image/upload/w_400,h_400,c_crop,g_face,r_max/w_200/lady.jpg"  // Profile Image
             });
-            tomTransactions.Add(new Transaction()
-            {
-                Id = Guid.NewGuid().ToString(),                 // Auto generating Id
-                TransactionAmount = -500M,                      // Transaction of 500$
-                TransactionDate = DateTime.Now.AddYears(-1),    // Transaction happend one year ago
-                TransactionType = TransactionType.Withdraw      // amount was subtracted
-            });
-            tomTransactions.Add(new Transaction()
-            {
-                Id = Guid.NewGuid().ToString(),                 // Auto generating Id
-                TransactionAmount = 1000M,                      // Transaction of 100$
-                TransactionDate = DateTime.Now.AddYears(-2),    // Transaction happend two year ago
-                TransactionType = TransactionType.Deposit       // amount was added
-            });
+
+            // creating the collection for account list
+            this.Accounts = new List<Account>(); 
+
+            // initializing empty accounts
             this.Accounts.Add(new Account
             {
                 Id = "37846734-172e-4149-8cec-6f43d1eb3f60",    // Unique GUID of the account
@@ -150,17 +148,44 @@ public class BBBankContext
                 AccountStatus = AccountStatus.Active,           // Account status
                 Transactions = tomTransactions                  // associating above transactions with the account
             }); 
-        }
-        public List<Account> Accounts { get; set; }
-        
-}
 
+           // creating the collection for transaction list
+            var tomTransactions = new List<Transaction>();
+
+            // initializing with some transactions 
+            tomTransactions.Add(new Transaction()
+            {
+                Id = Guid.NewGuid().ToString(),                 // Auto generating Id
+                TransactionAmount = 3000M,                      // Transaction of 3000$
+                TransactionDate = DateTime.Now.AddDays(1),      // Transaction occurred yesterday
+                TransactionType = TransactionType.Deposit       // amount was added
+            });
+            tomTransactions.Add(new Transaction()
+            {
+                Id = Guid.NewGuid().ToString(),                 // Auto generating Id
+                TransactionAmount = -500M,                      // Transaction of 500$
+                TransactionDate = DateTime.Now.AddYears(-1),    // Transaction occurred one year ago
+                TransactionType = TransactionType.Withdraw      // amount was subtracted
+            });
+            tomTransactions.Add(new Transaction()
+            {
+                Id = Guid.NewGuid().ToString(),                 // Auto generating Id
+                TransactionAmount = 1000M,                      // Transaction of 100$
+                TransactionDate = DateTime.Now.AddYears(-2),    // Transaction occurred two year ago
+                TransactionType = TransactionType.Deposit       // amount was added
+            });
+        }
+
+        public List<Transaction> Transactions { get; set; }
+        public List<Account> Accounts { get; set; }
+        public List<User> Users { get; set; }
+}
 ```
 
 
 In this step we will add an override `OnModelCreating` method in BBBankContext class and initialize the data.
 
-Here we have addded the migration that changes to the data specified with `HasData` are transformed to calls to `InsertData(), UpdateData(), and DeleteData()`.
+Here we have added the migration that changes to the data specified with `HasData` are transformed to calls to `InsertData(), UpdateData(), and DeleteData()`.
 
 ```cs
  protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -168,32 +193,45 @@ Here we have addded the migration that changes to the data specified with `HasDa
             //The modelBuilder is being used to construct the model for this context.
             modelBuilder.Entity<Account>(b =>
             {
+                modelBuilder.Entity<User>(b =>
+            {
+                b.HasData(new User
+                {
+                    Id = "b6111852-a1e8-4757-9820-70b8c20e1ff0",    // Unique GUID of the User
+                    FirstName = "Ali",                              // FirstName
+                    LastName = "Taj",                               // LastName
+                    Email = "malitaj-dev@outlook.com",              // Email ID
+                    ProfilePicUrl = "https://res.cloudinary.com/demo/image/upload/w_400,h_400,c_crop,g_face,r_max/w_200/lady.jpg"   // Profile Image URL
+
+                });
+            });
+
                 b.HasData(new Account
                 {
-                    // Here Id is a Primary key which acts as a forign key in Transaction class
+                    // Here Id is a Primary key which acts as a foreign key in Transaction class
                     Id = "37846734-172e-4149-8cec-6f43d1eb3f60",            
                     AccountNumber = "0001-1001",                // Account Number
-                    AccountTitle = "Raas Masood",               // Account Title
+                    AccountTitle = "Ali Taj",                   // Account Title
                     CurrentBalance = 3500M,                     // Current Balance
-                    AccountStatus = AccountStatus.Active        // Account status
-
+                    AccountStatus = AccountStatus.Active,        // Account status
+                    UserId = "b6111852-a1e8-4757-9820-70b8c20e1ff0" // foreign Key of User
                 });
 
                 modelBuilder.Entity<Transaction>().HasData(
                   new
                   {
                       Id = Guid.NewGuid().ToString(),                           // Auto generating Id    
-                      AccountId = "37846734-172e-4149-8cec-6f43d1eb3f60",       // Here AccountId is a Forign key from linked with Class Account and Id property
+                      AccountId = "37846734-172e-4149-8cec-6f43d1eb3f60",       // Here AccountId is a foreign key from linked with Class Account and Id property
                       TransactionAmount = 3000M,                                // Transaction of 3000$
-                      TransactionDate = DateTime.Now.AddDays(-1),               // Transaction happend one day ago
-                      TransactionType = TransactionType.Deposit                 // Ammount was added    
+                      TransactionDate = DateTime.Now.AddDays(-1),               // Transaction occurred one day ago
+                      TransactionType = TransactionType.Deposit                 // Amount was added    
                   },
                   new
                   {
                       Id = Guid.NewGuid().ToString(),                           // Auto generating Id
                       AccountId = "37846734-172e-4149-8cec-6f43d1eb3f60",
                       TransactionAmount = -500M,                                // Transaction of 500$
-                      TransactionDate = DateTime.Now.AddYears(-1),              // Transaction happend one year ago
+                      TransactionDate = DateTime.Now.AddYears(-1),              // Transaction occurred one year ago
                       TransactionType = TransactionType.Withdraw                // Amount was subtracted
 
                   },
@@ -202,8 +240,8 @@ Here we have addded the migration that changes to the data specified with `HasDa
                       Id = Guid.NewGuid().ToString(),                           // Auto generating Id    
                       AccountId = "37846734-172e-4149-8cec-6f43d1eb3f60",       
                       TransactionAmount = 1000M,                                // Transaction of 1000$
-                      TransactionDate = DateTime.Now.AddYears(-2),              // Transaction happend two years ago
-                      TransactionType = TransactionType.Deposit                 // Ammount was added
+                      TransactionDate = DateTime.Now.AddYears(-2),              // Transaction occurred two years ago
+                      TransactionType = TransactionType.Deposit                 // Amount was added
 
                   }
                 );
@@ -258,7 +296,7 @@ b => b.UseSqlServer(connectionString)
 var app = builder.Build();
  ```
 
- To Resolve UseSqlServer and UseLazyLoadingProxies install the folloiwing nugets in Api project
+ To Resolve UseSqlServer and UseLazyLoadingProxies install the following nugets in Api project
 
  ```
 Install-Package Microsoft.EntityFrameworkCore
@@ -270,11 +308,11 @@ Install-Package Microsoft.EntityFrameworkCore.SqlServer
 Install-Package Microsoft.EntityFrameworkCore.Proxies
  ```
 
-  ## Step 7: Making sure the conenction string is working 
+  ## Step 7: Making sure the connection string is working 
 
   * Open server explorer right click data connection and select add connection...
   * Select Microsoft SQL Server
-  * Enter the credentails and click Test Connection
+  * Enter the credentials and click Test Connection
 
 ![4](https://user-images.githubusercontent.com/100709775/161059404-ec8e5d6d-d788-406c-97ae-8bef335471e3.PNG)
 
@@ -288,28 +326,72 @@ Install-Package Microsoft.EntityFrameworkCore.Proxies
   Select the Relevant IP address and click add.
 
 
-## Step 9 : Setting Virtual keyword
+## Step 9 : Setting Virtual keyword and Property
 
 The `virtual` keyword in C# is used to override the base class member in its derived class based on the requirement.
 
-Here we will add virtual keyword to `Transactions` object in Account class and `Account` object in Transaction class as below :
+Here we will add virtual keyword to `Account` object in Transaction class, `Transactions` object in Account class and `Account` object in User class as below :
 
 ```cs
- public class Transaction : BaseEntity
+    public class Transaction : BaseEntity // Inheriting from Base Entity class
     {
+        //Transaction type
         public TransactionType TransactionType { get; set; }
+
+        //When transaction was recorded
         public DateTime TransactionDate { get; set; }
+
+        //Amount of transaction
         public decimal TransactionAmount { get; set; }
+
+        //Associated account of that transaction
         public virtual Account Account { get; set; }
     }
+```
 
-     public class Account : BaseEntity
+We have also added `User` object and a foreign key `UserId` in Account class
+
+```cs
+    public class Account : BaseEntity // Inheriting from Base Entity class
     {
+        // String that uniquely identifies the account
         public string AccountNumber { get; set; }
+        
+        //Title of the account
         public string AccountTitle { get; set; }
+        
+        //Available Balance of the account
         public decimal CurrentBalance { get; set; }
+        
+        //Account's status 
         public AccountStatus AccountStatus { get; set; }
+
+        // Setting foreign key for 1 to 1 relationship
+        [ForeignKey("UserId")]              
+        public string UserId { get; set; }
+        // One Account might have 1 User (1:1 relationship) 
+        public virtual User User { get; set; }
+                
+        // One Account might have 0 or more Transactions (1:Many relationship)
         public virtual ICollection<Transaction> Transactions { get; set; }
+    }
+
+    public class User : BaseEntity
+    {
+        // First name of the user.
+        public string FirstName { get; set; }
+
+        // Last name of the user.
+        public string LastName { get; set; }
+
+        // Email Id of the user.
+        public string Email { get; set; }
+
+        // Profile picture URL of user.
+        public string ProfilePicUrl { get; set; }
+
+        // One User might have 1 Account (1:1 relationship)
+        public virtual Account Account { get; set; }
     }
 ```
 
@@ -318,7 +400,7 @@ Here we will add virtual keyword to `Transactions` object in Account class and `
 The  [Migration](https://docs.microsoft.com/en-us/ef/core/managing-schemas/migrations/?tabs=dotnet-core-cli) 
  feature in EF Core provides a way to incrementally update the database schema to keep it in sync with the application's data model while preserving existing data in the database.
 
- open package manage console and select infrastructure project and install the following nugest 
+ open package manage console and select infrastructure project and install the following nugets 
 
  ```
 Install-Package Microsoft.EntityFrameworkCore.Tools
