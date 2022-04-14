@@ -122,7 +122,10 @@ public class BBBankContext
 {
         public BBBankContext()
         { 
+            // creating the collection for user list
             this.Users = new List<User>();
+
+            // initializing a new user
             this.Users.Add(new User
             {
                 Id = "b6111852-a1e8-4757-9820-70b8c20e1ff0",    // Unique GUID of the account
@@ -132,7 +135,10 @@ public class BBBankContext
                 ProfilePicUrl = "https://res.cloudinary.com/demo/image/upload/w_400,h_400,c_crop,g_face,r_max/w_200/lady.jpg"  // Profile Image
             });
 
-            this.Accounts = new List<Account>();                // initializing empty accounts
+            // creating the collection for account list
+            this.Accounts = new List<Account>(); 
+
+            // initializing empty accounts
             this.Accounts.Add(new Account
             {
                 Id = "37846734-172e-4149-8cec-6f43d1eb3f60",    // Unique GUID of the account
@@ -143,8 +149,10 @@ public class BBBankContext
                 Transactions = tomTransactions                  // associating above transactions with the account
             }); 
 
-           // initializing some transactions
+           // creating the collection for transaction list
             var tomTransactions = new List<Transaction>();
+
+            // initializing with some transactions 
             tomTransactions.Add(new Transaction()
             {
                 Id = Guid.NewGuid().ToString(),                 // Auto generating Id
@@ -167,10 +175,11 @@ public class BBBankContext
                 TransactionType = TransactionType.Deposit       // amount was added
             });
         }
-        public List<Account> Accounts { get; set; }
-        
-}
 
+        public List<Transaction> Transactions { get; set; }
+        public List<Account> Accounts { get; set; }
+        public List<User> Users { get; set; }
+}
 ```
 
 
