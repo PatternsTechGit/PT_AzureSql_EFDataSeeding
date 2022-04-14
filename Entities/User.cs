@@ -7,21 +7,21 @@ using System.Threading.Tasks;
 
 namespace Entities
 {
-    public class User : BaseEntity
+    public class User : BaseEntity // Inheriting from Base Entity class
     {
-        // First name of the user.
+        // First name
         public string FirstName { get; set; }
 
-        // Last name of the user.
+        // Last name
         public string LastName { get; set; }
 
-        // Email Id of the user.
+        // Email of the user
         public string Email { get; set; }
 
-        // Profile picture URL of user.
+        // Profile picture or avatar
         public string ProfilePicUrl { get; set; }
 
-        // One USer might have 1 or more Account (1:Many relationship)
+        // Account attached to the user 
         public virtual Account Account { get; set; }
     }
 }

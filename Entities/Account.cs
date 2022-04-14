@@ -24,6 +24,7 @@ namespace Entities
         //Setting forignkey to resolve circular dependency
         [ForeignKey("UserId")]
         public string UserId { get; set; }
+
         // One User might have 1 or more Accounts (1:Many relationship) 
         public virtual User User { get; set; }
 

@@ -9,7 +9,7 @@ namespace Entities
 {
     public class BaseEntity
     {
-        [Key]
+        [Key]   // Unique Key for entity in database
         public string Id { get; set; }
     }
 }

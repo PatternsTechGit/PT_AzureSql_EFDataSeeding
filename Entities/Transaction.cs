@@ -18,7 +18,7 @@ namespace Entities
         public decimal TransactionAmount { get; set; }
 
         //Associcated acocunt of that transaction
-        public Account Account { get; set; }
+        public virtual Account Account { get; set; }
     }
 
     // Two posible types of an Trasaction
