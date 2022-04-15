@@ -422,6 +422,6 @@ Update-Database
 Verify that the data is present in the database by accessing the table from server explorer as below : 
 ![11111](https://user-images.githubusercontent.com/100709775/161940859-25a55be4-36b5-4da2-8c89-e4d8b23b3e6a.PNG)
 
-Run the API with URL http://localhost:5070/api/Transaction/GetLastThreeYearsBalancesById/37846734-172e-4149-8cec-6f43d1eb3f60 and see results as below 
+Run the API with URL http://localhost:5070/api/Transaction/GetLast3MonthBalances/37846734-172e-4149-8cec-6f43d1eb3f60 and see results as below 
 
 ![222222](https://user-images.githubusercontent.com/100709775/161940867-5ef6b1b2-1295-4bd2-a13f-86f3bf75915b.png)
