@@ -425,4 +425,4 @@ Verify that the data is present in the database by accessing the table from serv
 
 Run the API with URL http://localhost:5070/api/Transaction/GetLast12MonthBalances/37846734-172e-4149-8cec-6f43d1eb3f60 and see results as below 
 
-![image-20220419082325258](C:\Users\Patterns Tech\AppData\Roaming\Typora\typora-user-images\image-20220419082325258.png)
+![image-20220419082325258](12m2.png)
