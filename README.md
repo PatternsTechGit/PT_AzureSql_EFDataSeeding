@@ -17,9 +17,9 @@ EF Core can serve as an object-relational mapper (O/RM), which:
 
 ## About this exercise
 
-Previously we developed a base structure of an api solution in Asp.net core that have just two api functions `GetLast3MonthBalances` & `GetLast3MonthBalances/{accountId}` which returns data of the last 3 months total balances. 
+Previously we developed a base structure of an api solution in Asp.net core that have just two api functions `GetLast12MonthBalances` & `GetLast12MonthBalances/{accountId}` which returns data of the last 12 months total balances. 
 
-![1](https://user-images.githubusercontent.com/100709775/163239141-1aa56837-0ec5-4ac4-97b0-2133f752410e.png)
+![image-20220419082205446](C:\Users\Patterns Tech\AppData\Roaming\Typora\typora-user-images\image-20220419082205446.png)
 
 There are 4 Projects in the solution. 
 
@@ -30,7 +30,7 @@ There are 4 Projects in the solution.
 - **Services**: This project contains TranasacionService with the logic of converting Transactions into LineGraphData after fetching them from BBBankContext.
 
 
-- **BBBankAPI**: This project contains TransactionController with 2 GET methods `GetLast3MonthBalances` & `GetLast3MonthBalances/{accountId}` to call the TransactionService.
+- **BBBankAPI**: This project contains TransactionController with 2 GET methods `GetLast12MonthBalances` & `GetLast12MonthBalances/{accountId}` to call the TransactionService.
 
 
 ![2](https://user-images.githubusercontent.com/100709775/163239152-351b78e7-6295-4c53-b8c1-c5f89305e8b3.png)
@@ -244,6 +244,7 @@ Here we have added the migration that changes to the data specified with `HasDat
                       TransactionType = TransactionType.Deposit                 // Amount was added
 
                   }
+                    // More Transactions ...
                 );
             });
         }
@@ -422,6 +423,6 @@ Update-Database
 Verify that the data is present in the database by accessing the table from server explorer as below : 
 ![11111](https://user-images.githubusercontent.com/100709775/161940859-25a55be4-36b5-4da2-8c89-e4d8b23b3e6a.PNG)
 
-Run the API with URL http://localhost:5070/api/Transaction/GetLast3MonthBalances/37846734-172e-4149-8cec-6f43d1eb3f60 and see results as below 
+Run the API with URL http://localhost:5070/api/Transaction/GetLast12MonthBalances/37846734-172e-4149-8cec-6f43d1eb3f60 and see results as below 
 
-![222222](https://user-images.githubusercontent.com/100709775/161940867-5ef6b1b2-1295-4bd2-a13f-86f3bf75915b.png)
+![image-20220419082325258](C:\Users\Patterns Tech\AppData\Roaming\Typora\typora-user-images\image-20220419082325258.png)

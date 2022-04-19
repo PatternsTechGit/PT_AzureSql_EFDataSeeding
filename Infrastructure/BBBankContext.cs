@@ -83,6 +83,87 @@ namespace Infrastructure
                       TransactionDate = DateTime.Now.AddYears(-2),              // Transaction happend two years ago
                       TransactionType = TransactionType.Deposit                 // Ammount was added
 
+                  },
+                  new
+                  {
+                      Id = Guid.NewGuid().ToString(),
+                      AccountId = "37846734-172e-4149-8cec-6f43d1eb3f60",
+                      TransactionAmount = 500M,
+                      TransactionDate = DateTime.Now.AddMonths(-3),
+                      TransactionType = TransactionType.Deposit
+
+                  },
+                  new
+                  {
+                      Id = Guid.NewGuid().ToString(),
+                      AccountId = "37846734-172e-4149-8cec-6f43d1eb3f60",
+                      TransactionAmount = -200M,
+                      TransactionDate = DateTime.Now.AddMonths(-4),
+                      TransactionType = TransactionType.Withdraw
+
+                  },
+                  new
+                  {
+                      Id = Guid.NewGuid().ToString(),
+                      AccountId = "37846734-172e-4149-8cec-6f43d1eb3f60",
+                      TransactionAmount = 500M,
+                      TransactionDate = DateTime.Now.AddMonths(-5),
+                      TransactionType = TransactionType.Deposit
+
+                  },
+                  new
+                  {
+                      Id = Guid.NewGuid().ToString(),
+                      AccountId = "37846734-172e-4149-8cec-6f43d1eb3f60",
+                      TransactionAmount = 200M,
+                      TransactionDate = DateTime.Now.AddMonths(-6),
+                      TransactionType = TransactionType.Deposit
+
+                  },
+                  new
+                  {
+                      Id = Guid.NewGuid().ToString(),
+                      AccountId = "37846734-172e-4149-8cec-6f43d1eb3f60",
+                      TransactionAmount = -300M,
+                      TransactionDate = DateTime.Now.AddMonths(-7),
+                      TransactionType = TransactionType.Withdraw
+
+                  },
+                  new
+                  {
+                      Id = Guid.NewGuid().ToString(),
+                      AccountId = "37846734-172e-4149-8cec-6f43d1eb3f60",
+                      TransactionAmount = -100M,
+                      TransactionDate = DateTime.Now.AddMonths(-8),
+                      TransactionType = TransactionType.Withdraw
+
+                  },
+                  new
+                  {
+                      Id = Guid.NewGuid().ToString(),
+                      AccountId = "37846734-172e-4149-8cec-6f43d1eb3f60",
+                      TransactionAmount = 200M,
+                      TransactionDate = DateTime.Now.AddMonths(-9),
+                      TransactionType = TransactionType.Deposit
+
+                  },
+                  new
+                  {
+                      Id = Guid.NewGuid().ToString(),
+                      AccountId = "37846734-172e-4149-8cec-6f43d1eb3f60",
+                      TransactionAmount = -500M,
+                      TransactionDate = DateTime.Now.AddMonths(-10),
+                      TransactionType = TransactionType.Withdraw
+
+                  },
+                  new
+                  {
+                      Id = Guid.NewGuid().ToString(),
+                      AccountId = "37846734-172e-4149-8cec-6f43d1eb3f60",
+                      TransactionAmount = 900M,
+                      TransactionDate = DateTime.Now.AddMonths(-11),
+                      TransactionType = TransactionType.Deposit
+
                   }
                 );
         }
