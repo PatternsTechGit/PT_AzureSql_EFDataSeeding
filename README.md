@@ -17,7 +17,7 @@ EF Core can serve as an object-relational mapper (O/RM), which:
 
 ## About this exercise
 
-Previously we developed a base structure of an api solution in Asp.net core that have just two api functions `GetLast12MonthBalances` & `GetLast12MonthBalances/{accountId}` which returns data of the last 12 months total balances. 
+Previously we developed a base structure of an api solution in Asp.net core that have just two api functions `GetLast12MonthBalances` & `GetLast12MonthBalances/{userId}` which returns data of the last 12 months total balances. 
 
 ![image-20220419082205446](12m.jpg)
 
@@ -30,7 +30,7 @@ There are 4 Projects in the solution.
 - **Services**: This project contains TranasacionService with the logic of converting Transactions into LineGraphData after fetching them from BBBankContext.
 
 
-- **BBBankAPI**: This project contains TransactionController with 2 GET methods `GetLast12MonthBalances` & `GetLast12MonthBalances/{accountId}` to call the TransactionService.
+- **BBBankAPI**: This project contains TransactionController with 2 GET methods `GetLast12MonthBalances` & `GetLast12MonthBalances/{userId}` to call the TransactionService.
 
 
 ![2](https://user-images.githubusercontent.com/100709775/163239152-351b78e7-6295-4c53-b8c1-c5f89305e8b3.png)
@@ -118,67 +118,72 @@ Initialize all the Database models with DbSet in `BBBankContext` class
 Previously we have set hardcoded data which looks like below
 
 ```cs
-public class BBBankContext
-{
+ public class BBBankContext
+    {
         public BBBankContext()
-        { 
+        {
             // creating the collection for user list
             this.Users = new List<User>();
 
-            // initializing a new user
+            // initializing a new user 
             this.Users.Add(new User
             {
-                Id = "b6111852-a1e8-4757-9820-70b8c20e1ff0",    // Unique GUID of the account
-                FirstName = "Ali",          // FirstName                             
-                LastName = "Taj",           // LastName
-                Email = "malitaj-dev@outlook.com",  // Email Address
-                ProfilePicUrl = "https://res.cloudinary.com/demo/image/upload/w_400,h_400,c_crop,g_face,r_max/w_200/lady.jpg"  // Profile Image
+                Id = "aa45e3c9-261d-41fe-a1b0-5b4dcf79cfd3",    // Unique GUID of the User
+                FirstName = "Raas",                              // FirstName
+                LastName = "Masood",                               // LastName
+                Email = "rassmasood@hotmail.com",              // Email ID
+                ProfilePicUrl = "https://res.cloudinary.com/demo/image/upload/w_400,h_400,c_crop,g_face,r_max/w_200/lady.jpg"
             });
 
             // creating the collection for account list
-            this.Accounts = new List<Account>(); 
+            this.Accounts = new List<Account>();
 
-            // initializing empty accounts
+            // initializing a new account 
             this.Accounts.Add(new Account
             {
-                Id = "37846734-172e-4149-8cec-6f43d1eb3f60",    // Unique GUID of the account
-                AccountNumber = "0001-1001",                    // Account number
-                AccountTitle = "Tom Hanks",                     // Account Title
-                CurrentBalance = 3500M,                         // Account balance matches the transaction
-                AccountStatus = AccountStatus.Active,           // Account status
-                Transactions = tomTransactions                  // associating above transactions with the account
-            }); 
+                Id = "37846734-172e-4149-8cec-6f43d1eb3f60",
+                AccountNumber = "0001-1001",
+                AccountTitle = "Raas Masood",
+                CurrentBalance = 3500M,
+                AccountStatus = AccountStatus.Active,
+                User = this.Users[0]
+            });
 
-           // creating the collection for transaction list
-            var tomTransactions = new List<Transaction>();
+            // creating the collection for transaction list
+            this.Transactions = new List<Transaction>();
 
             // initializing with some transactions 
-            tomTransactions.Add(new Transaction()
+            this.Transactions.Add(new Transaction()
             {
-                Id = Guid.NewGuid().ToString(),                 // Auto generating Id
-                TransactionAmount = 3000M,                      // Transaction of 3000$
-                TransactionDate = DateTime.Now.AddDays(1),      // Transaction occurred yesterday
-                TransactionType = TransactionType.Deposit       // amount was added
+                Id = Guid.NewGuid().ToString(),
+                TransactionAmount = 1000M,
+                TransactionDate = DateTime.Now,
+                TransactionType = TransactionType.Deposit,
+                Account = this.Accounts[0]
             });
-            tomTransactions.Add(new Transaction()
+            this.Transactions.Add(new Transaction()
             {
-                Id = Guid.NewGuid().ToString(),                 // Auto generating Id
-                TransactionAmount = -500M,                      // Transaction of 500$
-                TransactionDate = DateTime.Now.AddYears(-1),    // Transaction occurred one year ago
-                TransactionType = TransactionType.Withdraw      // amount was subtracted
+                Id = Guid.NewGuid().ToString(),
+                TransactionAmount = -100M,
+                TransactionDate = DateTime.Now.AddMonths(-1),
+                TransactionType = TransactionType.Withdraw,
+                Account = this.Accounts[0]
             });
-            tomTransactions.Add(new Transaction()
+            this.Transactions.Add(new Transaction()
             {
-                Id = Guid.NewGuid().ToString(),                 // Auto generating Id
-                TransactionAmount = 1000M,                      // Transaction of 100$
-                TransactionDate = DateTime.Now.AddYears(-2),    // Transaction occurred two year ago
-                TransactionType = TransactionType.Deposit       // amount was added
+                Id = Guid.NewGuid().ToString(),
+                TransactionAmount = -45M,
+                TransactionDate = DateTime.Now.AddMonths(-2),
+                TransactionType = TransactionType.Withdraw,
+                Account = this.Accounts[0]
             });
+            //More Transactions /...
         }
 
         public List<Transaction> Transactions { get; set; }
         public List<Account> Accounts { get; set; }
         public List<User> Users { get; set; }
+    }
 }
 ```
 
@@ -188,65 +193,146 @@ In this step we will add an override `OnModelCreating` method in BBBankContext c
 Here we have added the migration that changes to the data specified with `HasData` are transformed to calls to `InsertData(), UpdateData(), and DeleteData()`.
 
 ```cs
- protected override void OnModelCreating(ModelBuilder modelBuilder)
+  protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            //The modelBuilder is being used to construct the model for this context.
+            base.OnModelCreating(modelBuilder);
+
             modelBuilder.Entity<Account>(b =>
             {
                 modelBuilder.Entity<User>(b =>
-            {
-                b.HasData(new User
                 {
-                    Id = "b6111852-a1e8-4757-9820-70b8c20e1ff0",    // Unique GUID of the User
-                    FirstName = "Ali",                              // FirstName
-                    LastName = "Taj",                               // LastName
-                    Email = "malitaj-dev@outlook.com",              // Email ID
-                    ProfilePicUrl = "https://res.cloudinary.com/demo/image/upload/w_400,h_400,c_crop,g_face,r_max/w_200/lady.jpg"   // Profile Image URL
+                    b.HasData(new User
+                    {
+                        Id = "aa45e3c9-261d-41fe-a1b0-5b4dcf79cfd3",
+                        FirstName = "Raas",
+                        LastName = "Masood",
+                        Email = "rassmasood@hotmail.com",
+                        ProfilePicUrl = "https://res.cloudinary.com/demo/image/upload/w_400,h_400,c_crop,g_face,r_max/w_200/lady.jpg"   // Profile Image URL
 
+                    });
                 });
-            });
 
                 b.HasData(new Account
                 {
-                    // Here Id is a Primary key which acts as a foreign key in Transaction class
-                    Id = "37846734-172e-4149-8cec-6f43d1eb3f60",            
+                    // Here Id is a Primary key which acts as a forign key in Transaction class
+                    Id = "37846734-172e-4149-8cec-6f43d1eb3f60",
                     AccountNumber = "0001-1001",                // Account Number
-                    AccountTitle = "Ali Taj",                   // Account Title
+                    AccountTitle = "Raas Masood",                   // Account Title
                     CurrentBalance = 3500M,                     // Current Balance
                     AccountStatus = AccountStatus.Active,        // Account status
-                    UserId = "b6111852-a1e8-4757-9820-70b8c20e1ff0" // foreign Key of User
+                    UserId = "aa45e3c9-261d-41fe-a1b0-5b4dcf79cfd3" // Forign Key of User
                 });
 
-                modelBuilder.Entity<Transaction>().HasData(
+            });
+            modelBuilder.Entity<Transaction>().HasData(
                   new
                   {
                       Id = Guid.NewGuid().ToString(),                           // Auto generating Id    
-                      AccountId = "37846734-172e-4149-8cec-6f43d1eb3f60",       // Here AccountId is a foreign key from linked with Class Account and Id property
+                      AccountId = "37846734-172e-4149-8cec-6f43d1eb3f60",       // Here AccountId is a Forign key from linked with Class Account and Id property
                       TransactionAmount = 3000M,                                // Transaction of 3000$
-                      TransactionDate = DateTime.Now.AddDays(-1),               // Transaction occurred one day ago
-                      TransactionType = TransactionType.Deposit                 // Amount was added    
+                      TransactionDate = DateTime.Now.AddDays(-1),               // Transaction happend one day ago
+                      TransactionType = TransactionType.Deposit                 // Ammount was added    
                   },
                   new
                   {
                       Id = Guid.NewGuid().ToString(),                           // Auto generating Id
                       AccountId = "37846734-172e-4149-8cec-6f43d1eb3f60",
                       TransactionAmount = -500M,                                // Transaction of 500$
-                      TransactionDate = DateTime.Now.AddYears(-1),              // Transaction occurred one year ago
+                      TransactionDate = DateTime.Now.AddYears(-1),              // Transaction happend one year ago
                       TransactionType = TransactionType.Withdraw                // Amount was subtracted
 
                   },
                   new
                   {
                       Id = Guid.NewGuid().ToString(),                           // Auto generating Id    
-                      AccountId = "37846734-172e-4149-8cec-6f43d1eb3f60",       
+                      AccountId = "37846734-172e-4149-8cec-6f43d1eb3f60",
                       TransactionAmount = 1000M,                                // Transaction of 1000$
-                      TransactionDate = DateTime.Now.AddYears(-2),              // Transaction occurred two years ago
-                      TransactionType = TransactionType.Deposit                 // Amount was added
+                      TransactionDate = DateTime.Now.AddYears(-2),              // Transaction happend two years ago
+                      TransactionType = TransactionType.Deposit                 // Ammount was added
+
+                  },
+                  new
+                  {
+                      Id = Guid.NewGuid().ToString(),
+                      AccountId = "37846734-172e-4149-8cec-6f43d1eb3f60",
+                      TransactionAmount = 500M,
+                      TransactionDate = DateTime.Now.AddMonths(-3),
+                      TransactionType = TransactionType.Deposit
+
+                  },
+                  new
+                  {
+                      Id = Guid.NewGuid().ToString(),
+                      AccountId = "37846734-172e-4149-8cec-6f43d1eb3f60",
+                      TransactionAmount = -200M,
+                      TransactionDate = DateTime.Now.AddMonths(-4),
+                      TransactionType = TransactionType.Withdraw
+
+                  },
+                  new
+                  {
+                      Id = Guid.NewGuid().ToString(),
+                      AccountId = "37846734-172e-4149-8cec-6f43d1eb3f60",
+                      TransactionAmount = 500M,
+                      TransactionDate = DateTime.Now.AddMonths(-5),
+                      TransactionType = TransactionType.Deposit
+
+                  },
+                  new
+                  {
+                      Id = Guid.NewGuid().ToString(),
+                      AccountId = "37846734-172e-4149-8cec-6f43d1eb3f60",
+                      TransactionAmount = 200M,
+                      TransactionDate = DateTime.Now.AddMonths(-6),
+                      TransactionType = TransactionType.Deposit
+
+                  },
+                  new
+                  {
+                      Id = Guid.NewGuid().ToString(),
+                      AccountId = "37846734-172e-4149-8cec-6f43d1eb3f60",
+                      TransactionAmount = -300M,
+                      TransactionDate = DateTime.Now.AddMonths(-7),
+                      TransactionType = TransactionType.Withdraw
+
+                  },
+                  new
+                  {
+                      Id = Guid.NewGuid().ToString(),
+                      AccountId = "37846734-172e-4149-8cec-6f43d1eb3f60",
+                      TransactionAmount = -100M,
+                      TransactionDate = DateTime.Now.AddMonths(-8),
+                      TransactionType = TransactionType.Withdraw
+
+                  },
+                  new
+                  {
+                      Id = Guid.NewGuid().ToString(),
+                      AccountId = "37846734-172e-4149-8cec-6f43d1eb3f60",
+                      TransactionAmount = 200M,
+                      TransactionDate = DateTime.Now.AddMonths(-9),
+                      TransactionType = TransactionType.Deposit
+
+                  },
+                  new
+                  {
+                      Id = Guid.NewGuid().ToString(),
+                      AccountId = "37846734-172e-4149-8cec-6f43d1eb3f60",
+                      TransactionAmount = -500M,
+                      TransactionDate = DateTime.Now.AddMonths(-10),
+                      TransactionType = TransactionType.Withdraw
+
+                  },
+                  new
+                  {
+                      Id = Guid.NewGuid().ToString(),
+                      AccountId = "37846734-172e-4149-8cec-6f43d1eb3f60",
+                      TransactionAmount = 900M,
+                      TransactionDate = DateTime.Now.AddMonths(-11),
+                      TransactionType = TransactionType.Deposit
 
                   }
-                    // More Transactions ...
                 );
-            });
         }
 ```
 
@@ -423,6 +509,6 @@ Update-Database
 Verify that the data is present in the database by accessing the table from server explorer as below : 
 ![11111](https://user-images.githubusercontent.com/100709775/161940859-25a55be4-36b5-4da2-8c89-e4d8b23b3e6a.PNG)
 
-Run the API with URL http://localhost:5070/api/Transaction/GetLast12MonthBalances/37846734-172e-4149-8cec-6f43d1eb3f60 and see results as below 
+Run the API with URL http://localhost:5070/api/Transaction/GetLast12MonthBalances/aa45e3c9-261d-41fe-a1b0-5b4dcf79cfd3 and see results as below 
 
 ![image-20220419082325258](12m2.png)
