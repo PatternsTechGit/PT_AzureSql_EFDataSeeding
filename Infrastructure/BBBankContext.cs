@@ -25,10 +25,10 @@ namespace Infrastructure
                 {
                     b.HasData(new User
                     {
-                        Id = "b6111852-a1e8-4757-9820-70b8c20e1ff0",    // Unique GUID of the User
-                        FirstName = "Ali",                              // FirstName
-                        LastName = "Taj",                               // LastName
-                        Email = "malitaj-dev@outlook.com",              // Email ID
+                        Id = "aa45e3c9-261d-41fe-a1b0-5b4dcf79cfd3",
+                        FirstName = "Raas",
+                        LastName = "Masood",
+                        Email = "rassmasood@hotmail.com",
                         ProfilePicUrl = "https://res.cloudinary.com/demo/image/upload/w_400,h_400,c_crop,g_face,r_max/w_200/lady.jpg"   // Profile Image URL
 
                     });
@@ -39,23 +39,12 @@ namespace Infrastructure
                     // Here Id is a Primary key which acts as a forign key in Transaction class
                     Id = "37846734-172e-4149-8cec-6f43d1eb3f60",
                     AccountNumber = "0001-1001",                // Account Number
-                    AccountTitle = "Ali Taj",                   // Account Title
+                    AccountTitle = "Raas Masood",                   // Account Title
                     CurrentBalance = 3500M,                     // Current Balance
                     AccountStatus = AccountStatus.Active,        // Account status
-                    UserId = "b6111852-a1e8-4757-9820-70b8c20e1ff0" // Forign Key of User
+                    UserId = "aa45e3c9-261d-41fe-a1b0-5b4dcf79cfd3" // Forign Key of User
                 });
 
-                b.HasData(new Account
-                {
-                    // Here Id is a Primary key which acts as a forign key in Transaction class
-                    Id = "2f115781-c0d2-4f98-a70b-0bc4ed01d780",
-                    AccountNumber = "0002-2002",                    // Account Number
-                    AccountTitle = "Salman Taj",                    // Account Title
-                    CurrentBalance = 545M,                          // Current Balance
-                    AccountStatus = AccountStatus.Active,           // Account status
-                    UserId = "582ebb0b-f9e0-4385-8787-37bd337f18b7" // Forign Key of User
-
-                });
             });
             modelBuilder.Entity<Transaction>().HasData(
                   new
