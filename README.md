@@ -370,6 +370,8 @@ var connectionString = configuration.GetConnectionString("BBBankDBConnString");
 // Add services to the container.
 
 builder.Services.AddControllers();
+
+
 ///...Dependency Injection settings
 builder.Services.AddScoped<ITransactionService, TransactionService>();
 builder.Services.AddScoped<DbContext, BBBankContext>();
@@ -381,6 +383,15 @@ b => b.UseSqlServer(connectionString)
 .UseLazyLoadingProxies(true)
 );
 var app = builder.Build();
+
+// Configure the HTTP request pipeline.
+
+app.UseAuthorization();
+
+app.MapControllers();
+
+app.Run();
+
  ```
 
  To Resolve UseSqlServer and UseLazyLoadingProxies install the following nugets in Api project
