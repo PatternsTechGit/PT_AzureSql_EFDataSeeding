@@ -193,7 +193,7 @@ In this step we will add an override `OnModelCreating` method in BBBankContext c
 Here we have added the migration that changes to the data specified with `HasData` are transformed to calls to `InsertData(), UpdateData(), and DeleteData()`.
 
 ```cs
-  protected override void OnModelCreating(ModelBuilder modelBuilder)
+ protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
@@ -230,7 +230,7 @@ Here we have added the migration that changes to the data specified with `HasDat
                       Id = Guid.NewGuid().ToString(),                           // Auto generating Id    
                       AccountId = "37846734-172e-4149-8cec-6f43d1eb3f60",       // Here AccountId is a Forign key from linked with Class Account and Id property
                       TransactionAmount = 3000M,                                // Transaction of 3000$
-                      TransactionDate = DateTime.Now.AddDays(-1),               // Transaction happend one day ago
+                      TransactionDate = DateTime.UtcNow.AddDays(-1),               // Transaction happend one day ago
                       TransactionType = TransactionType.Deposit                 // Ammount was added    
                   },
                   new
@@ -238,7 +238,7 @@ Here we have added the migration that changes to the data specified with `HasDat
                       Id = Guid.NewGuid().ToString(),                           // Auto generating Id
                       AccountId = "37846734-172e-4149-8cec-6f43d1eb3f60",
                       TransactionAmount = -500M,                                // Transaction of 500$
-                      TransactionDate = DateTime.Now.AddYears(-1),              // Transaction happend one year ago
+                      TransactionDate = DateTime.UtcNow.AddYears(-1),              // Transaction happend one year ago
                       TransactionType = TransactionType.Withdraw                // Amount was subtracted
 
                   },
@@ -247,7 +247,7 @@ Here we have added the migration that changes to the data specified with `HasDat
                       Id = Guid.NewGuid().ToString(),                           // Auto generating Id    
                       AccountId = "37846734-172e-4149-8cec-6f43d1eb3f60",
                       TransactionAmount = 1000M,                                // Transaction of 1000$
-                      TransactionDate = DateTime.Now.AddYears(-2),              // Transaction happend two years ago
+                      TransactionDate = DateTime.UtcNow.AddYears(-2),              // Transaction happend two years ago
                       TransactionType = TransactionType.Deposit                 // Ammount was added
 
                   },
@@ -256,7 +256,7 @@ Here we have added the migration that changes to the data specified with `HasDat
                       Id = Guid.NewGuid().ToString(),
                       AccountId = "37846734-172e-4149-8cec-6f43d1eb3f60",
                       TransactionAmount = 500M,
-                      TransactionDate = DateTime.Now.AddMonths(-3),
+                      TransactionDate = DateTime.UtcNow.AddMonths(-3),
                       TransactionType = TransactionType.Deposit
 
                   },
@@ -265,7 +265,7 @@ Here we have added the migration that changes to the data specified with `HasDat
                       Id = Guid.NewGuid().ToString(),
                       AccountId = "37846734-172e-4149-8cec-6f43d1eb3f60",
                       TransactionAmount = -200M,
-                      TransactionDate = DateTime.Now.AddMonths(-4),
+                      TransactionDate = DateTime.UtcNow.AddMonths(-4),
                       TransactionType = TransactionType.Withdraw
 
                   },
@@ -274,7 +274,7 @@ Here we have added the migration that changes to the data specified with `HasDat
                       Id = Guid.NewGuid().ToString(),
                       AccountId = "37846734-172e-4149-8cec-6f43d1eb3f60",
                       TransactionAmount = 500M,
-                      TransactionDate = DateTime.Now.AddMonths(-5),
+                      TransactionDate = DateTime.UtcNow.AddMonths(-5),
                       TransactionType = TransactionType.Deposit
 
                   },
@@ -283,7 +283,7 @@ Here we have added the migration that changes to the data specified with `HasDat
                       Id = Guid.NewGuid().ToString(),
                       AccountId = "37846734-172e-4149-8cec-6f43d1eb3f60",
                       TransactionAmount = 200M,
-                      TransactionDate = DateTime.Now.AddMonths(-6),
+                      TransactionDate = DateTime.UtcNow.AddMonths(-6),
                       TransactionType = TransactionType.Deposit
 
                   },
@@ -292,7 +292,7 @@ Here we have added the migration that changes to the data specified with `HasDat
                       Id = Guid.NewGuid().ToString(),
                       AccountId = "37846734-172e-4149-8cec-6f43d1eb3f60",
                       TransactionAmount = -300M,
-                      TransactionDate = DateTime.Now.AddMonths(-7),
+                      TransactionDate = DateTime.UtcNow.AddMonths(-7),
                       TransactionType = TransactionType.Withdraw
 
                   },
@@ -301,7 +301,7 @@ Here we have added the migration that changes to the data specified with `HasDat
                       Id = Guid.NewGuid().ToString(),
                       AccountId = "37846734-172e-4149-8cec-6f43d1eb3f60",
                       TransactionAmount = -100M,
-                      TransactionDate = DateTime.Now.AddMonths(-8),
+                      TransactionDate = DateTime.UtcNow.AddMonths(-8),
                       TransactionType = TransactionType.Withdraw
 
                   },
@@ -310,7 +310,7 @@ Here we have added the migration that changes to the data specified with `HasDat
                       Id = Guid.NewGuid().ToString(),
                       AccountId = "37846734-172e-4149-8cec-6f43d1eb3f60",
                       TransactionAmount = 200M,
-                      TransactionDate = DateTime.Now.AddMonths(-9),
+                      TransactionDate = DateTime.UtcNow.AddMonths(-9),
                       TransactionType = TransactionType.Deposit
 
                   },
@@ -319,7 +319,7 @@ Here we have added the migration that changes to the data specified with `HasDat
                       Id = Guid.NewGuid().ToString(),
                       AccountId = "37846734-172e-4149-8cec-6f43d1eb3f60",
                       TransactionAmount = -500M,
-                      TransactionDate = DateTime.Now.AddMonths(-10),
+                      TransactionDate = DateTime.UtcNow.AddMonths(-10),
                       TransactionType = TransactionType.Withdraw
 
                   },
@@ -328,7 +328,7 @@ Here we have added the migration that changes to the data specified with `HasDat
                       Id = Guid.NewGuid().ToString(),
                       AccountId = "37846734-172e-4149-8cec-6f43d1eb3f60",
                       TransactionAmount = 900M,
-                      TransactionDate = DateTime.Now.AddMonths(-11),
+                      TransactionDate = DateTime.UtcNow.AddMonths(-11),
                       TransactionType = TransactionType.Deposit
 
                   }
