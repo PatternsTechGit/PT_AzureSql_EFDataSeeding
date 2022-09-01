@@ -57,6 +57,7 @@ For more details about this base project See: https://github.com/PatternsTechGit
 * Select relevant resource group (create new resource group if not exists)
 * Enter database name : BBBankDB
 * Select relevant server or create a new server
+* After selecting or creating server ,configure **Compute + storage** according to your needs .
 * Click Review + Create
 
 It will create a new Azure SQL database as below :
@@ -65,7 +66,7 @@ It will create a new Azure SQL database as below :
 
  ## Step 2: Inherit BBBankContext from Entity Framework core 
 
- To use `DBContext` install EF Core using the command in Package Manager Console as below 
+ To use `DBContext` install **EF Core**. For this, open Package Manager Console, select **infrastructure** project and install the following nuget packages
 
 ```
 Install-Package Microsoft.EntityFrameworkCore
@@ -106,9 +107,76 @@ Initialize all the Database models with DbSet in `BBBankContext` class
      }
 ```
 
+## Step 4 : Setting Virtual keyword and Property
 
+The `virtual` keyword in C# is used to override the base class member in its derived class based on the requirement.
 
- ## Step 4: Data Seeding 
+Here we will add virtual keyword to `Account` object in Transaction class, `Transactions` object in Account class and `Account` object in User class as below :
+
+```cs
+    public class Transaction : BaseEntity // Inheriting from Base Entity class
+    {
+        //Transaction type
+        public TransactionType TransactionType { get; set; }
+
+        //When transaction was recorded
+        public DateTime TransactionDate { get; set; }
+
+        //Amount of transaction
+        public decimal TransactionAmount { get; set; }
+
+        //Associated account of that transaction
+        public virtual Account Account { get; set; }
+    }
+```
+
+We have also added `User` object and a foreign key `UserId` in Account class
+
+```cs
+    public class Account : BaseEntity // Inheriting from Base Entity class
+    {
+        // String that uniquely identifies the account
+        public string AccountNumber { get; set; }
+        
+        //Title of the account
+        public string AccountTitle { get; set; }
+        
+        //Available Balance of the account
+        public decimal CurrentBalance { get; set; }
+        
+        //Account's status 
+        public AccountStatus AccountStatus { get; set; }
+
+        // Setting foreign key for 1 to 1 relationship
+        [ForeignKey("UserId")]              
+        public string UserId { get; set; }
+        // One Account might have 1 User (1:1 relationship) 
+        public virtual User User { get; set; }
+                
+        // One Account might have 0 or more Transactions (1:Many relationship)
+        public virtual ICollection<Transaction> Transactions { get; set; }
+    }
+
+    public class User : BaseEntity
+    {
+        // First name of the user.
+        public string FirstName { get; set; }
+
+        // Last name of the user.
+        public string LastName { get; set; }
+
+        // Email Id of the user.
+        public string Email { get; set; }
+
+        // Profile picture URL of user.
+        public string ProfilePicUrl { get; set; }
+
+        // One User might have 1 Account (1:1 relationship)
+        public virtual Account Account { get; set; }
+    }
+```
+
+ ## Step 5: Data Seeding 
 
 [Data seeding](https://docs.microsoft.com/en-us/ef/core/modeling/data-seeding#:~:text=Data%20seeding%20is%20the%20process,Custom%20initialization%20logic) is the process of populating a database with an initial set of data.
 
@@ -337,7 +405,7 @@ Here we have added the migration that changes to the data specified with `HasDat
 ```
 
 
-## Step 5: Setting up Connection string 
+## Step 6: Setting up Connection string 
 
 Go to the database from Azure portal and click on link Connection String under settings tab and copy the connectionstring value as below 
 
@@ -351,7 +419,7 @@ Go to appsettings.json and add a new section for Connection Strings as below :
   }
 ```
 
- ## Step 6: Dependency Injecting BBBankContext in Program.cs 
+ ## Step 7: Dependency Injecting BBBankContext in Program.cs 
 
  Open the program.cs and paste the code as below 
 
@@ -406,92 +474,22 @@ Install-Package Microsoft.EntityFrameworkCore.SqlServer
 Install-Package Microsoft.EntityFrameworkCore.Proxies
  ```
 
-  ## Step 7: Making sure the connection string is working 
+  ## Step 8: Making sure the connection string is working 
 
   * Open server explorer right click data connection and select add connection...
   * Select Microsoft SQL Server
-  * Enter the credentials and click Test Connection
+  * Enter the **Server name** and credentials then click Test Connection
 
 ![4](https://user-images.githubusercontent.com/100709775/161059404-ec8e5d6d-d788-406c-97ae-8bef335471e3.PNG)
 
 
-  ## Step 8: Resolve IP access error 
+  ## Step 9: Resolve IP access error 
 
   You might get an error because by-default your IP address is blocked, To resolve this error go to the database from Azure portal and click 'Set Server Firewall' as below 
 
   ![5](https://user-images.githubusercontent.com/100709775/161060394-d2adae0e-504a-42c1-bb90-cbe4521fa3b1.PNG)
 
   Select the Relevant IP address and click add.
-
-
-## Step 9 : Setting Virtual keyword and Property
-
-The `virtual` keyword in C# is used to override the base class member in its derived class based on the requirement.
-
-Here we will add virtual keyword to `Account` object in Transaction class, `Transactions` object in Account class and `Account` object in User class as below :
-
-```cs
-    public class Transaction : BaseEntity // Inheriting from Base Entity class
-    {
-        //Transaction type
-        public TransactionType TransactionType { get; set; }
-
-        //When transaction was recorded
-        public DateTime TransactionDate { get; set; }
-
-        //Amount of transaction
-        public decimal TransactionAmount { get; set; }
-
-        //Associated account of that transaction
-        public virtual Account Account { get; set; }
-    }
-```
-
-We have also added `User` object and a foreign key `UserId` in Account class
-
-```cs
-    public class Account : BaseEntity // Inheriting from Base Entity class
-    {
-        // String that uniquely identifies the account
-        public string AccountNumber { get; set; }
-        
-        //Title of the account
-        public string AccountTitle { get; set; }
-        
-        //Available Balance of the account
-        public decimal CurrentBalance { get; set; }
-        
-        //Account's status 
-        public AccountStatus AccountStatus { get; set; }
-
-        // Setting foreign key for 1 to 1 relationship
-        [ForeignKey("UserId")]              
-        public string UserId { get; set; }
-        // One Account might have 1 User (1:1 relationship) 
-        public virtual User User { get; set; }
-                
-        // One Account might have 0 or more Transactions (1:Many relationship)
-        public virtual ICollection<Transaction> Transactions { get; set; }
-    }
-
-    public class User : BaseEntity
-    {
-        // First name of the user.
-        public string FirstName { get; set; }
-
-        // Last name of the user.
-        public string LastName { get; set; }
-
-        // Email Id of the user.
-        public string Email { get; set; }
-
-        // Profile picture URL of user.
-        public string ProfilePicUrl { get; set; }
-
-        // One User might have 1 Account (1:1 relationship)
-        public virtual Account Account { get; set; }
-    }
-```
 
   ## Step 10: Migrations 
 
