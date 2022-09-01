@@ -518,6 +518,11 @@ Update-Database
 Verify that the data is present in the database by accessing the table from server explorer as below : 
 ![11111](https://user-images.githubusercontent.com/100709775/161940859-25a55be4-36b5-4da2-8c89-e4d8b23b3e6a.PNG)
 
+
+## Final Output
+
 Run the API with URL http://localhost:5070/api/Transaction/GetLast12MonthBalances/aa45e3c9-261d-41fe-a1b0-5b4dcf79cfd3 and see results as below 
 
-![image-20220419082325258](12m2.png)
+-----------------------------------
+
+> ![image-20220419082325258](12m2.png)
